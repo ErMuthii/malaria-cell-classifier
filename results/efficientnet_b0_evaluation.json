@@ -1,0 +1,32 @@
+{
+  "threshold": 0.12310579419136047,
+  "sensitivity": 0.9731543624161074,
+  "specificity": 0.80859375,
+  "precision": 0.838150289017341,
+  "f2": 0.9427828348504551,
+  "roc_auc": 0.9790064810792186,
+  "brier_score": 0.04966083640344646,
+  "confusion_matrix": [
+    [
+      1656,
+      392
+    ],
+    [
+      56,
+      2030
+    ]
+  ],
+  "confidence_intervals_95": {
+    "sensitivity": [
+      0.966633226568732,
+      0.9801699716713881
+    ],
+    "specificity": [
+      0.7904862784785962,
+      0.8248650097775544
+    ]
+  },
+  "model_size_mb": 16.29059600830078,
+  "mean_inference_ms_per_image": 26.32670950241655,
+  "model": "efficientnet_b0"
+}

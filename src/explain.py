@@ -5,30 +5,44 @@ from __future__ import annotations
 import numpy as np
 
 
-def _feature_layer(model):
-    """Find the final spatial layer, including a nested transfer backbone."""
-    for layer in reversed(model.layers):
-        shape = getattr(layer, "output_shape", None)
-        if shape is None:
-            try:
-                shape = tuple(layer.output.shape)
-            except (AttributeError, ValueError):
-                continue
-        if isinstance(shape, tuple) and len(shape) == 4:
-            return layer
-    raise ValueError("The model has no spatial feature layer suitable for Grad-CAM")
-
-
 def grad_cam(model, image_batch, layer_name: str | None = None):
     """Generate a normalized Grad-CAM map for the parasitized probability."""
     import tensorflow as tf
 
-    layer = model.get_layer(layer_name) if layer_name else _feature_layer(model)
-    grad_model = tf.keras.Model(model.inputs, [layer.output, model.output])
+    requested_layer_found = layer_name is None
+    feature_maps = None
+
+    # Walking the outer model eagerly keeps nested application backbones connected
+    # to the classifier graph. Accessing a nested model's symbolic `layer.output`
+    # directly is disconnected from the outer input in Keras 3.
     with tf.GradientTape() as tape:
-        feature_maps, prediction = grad_model(image_batch, training=False)
+        value = tf.convert_to_tensor(image_batch)
+        for layer in model.layers:
+            if isinstance(layer, tf.keras.layers.InputLayer):
+                continue
+            try:
+                value = layer(value, training=False)
+            except TypeError:
+                value = layer(value)
+
+            is_spatial = getattr(value.shape, "rank", len(value.shape)) == 4
+            is_requested = layer_name is None or layer.name == layer_name
+            if is_spatial and is_requested:
+                feature_maps = value
+                tape.watch(feature_maps)
+                requested_layer_found = True
+
+        prediction = value
         target = prediction[:, 0]
+
+    if not requested_layer_found:
+        raise ValueError(f"Layer '{layer_name}' was not found in the outer model")
+    if feature_maps is None:
+        raise ValueError("The model has no spatial feature layer suitable for Grad-CAM")
+
     gradients = tape.gradient(target, feature_maps)
+    if gradients is None:
+        raise ValueError("The selected feature layer is not connected to the model prediction")
     weights = tf.reduce_mean(gradients, axis=(1, 2), keepdims=True)
     heatmap = tf.reduce_sum(weights * feature_maps, axis=-1)
     heatmap = tf.nn.relu(heatmap[0])

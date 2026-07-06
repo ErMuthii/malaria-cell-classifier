@@ -2,7 +2,16 @@
 
 from __future__ import annotations
 
+import os
 from collections.abc import Sequence
+
+
+def _configure_certificate_bundle() -> None:
+    """Give Python/Keras a portable CA bundle for HTTPS weight downloads."""
+    if "SSL_CERT_FILE" not in os.environ:
+        import certifi
+
+        os.environ["SSL_CERT_FILE"] = certifi.where()
 
 
 def _augmentation():
@@ -39,6 +48,7 @@ def build_custom_cnn(image_size: Sequence[int], dropout: float = 0.3):
 def _build_transfer(model_name: str, image_size: Sequence[int], dropout: float, weights: str | None):
     from tensorflow import keras
 
+    _configure_certificate_bundle()
     builders = {
         "mobilenet_v2": keras.applications.MobileNetV2,
         "efficientnet_b0": keras.applications.EfficientNetB0,

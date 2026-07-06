@@ -12,7 +12,8 @@ Expected local layout:
 data/
 ├── raw/          # optional original files
 ├── processed/    # optional prepared files
-└── sample/       # a few downloaded preview images
+├── sample/       # a few downloaded preview images
+└── tensorflow_datasets/  # shared local TFDS cache used by training
 ```
 
 Do not add patient-identifiable data. Confirm the source license and attribution requirements before redistributing any images.

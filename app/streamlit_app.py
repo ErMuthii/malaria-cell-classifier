@@ -3,7 +3,14 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+
+# Streamlit executes this file with app/ as the import root. Add the repository
+# root so the local src package works both locally and on Community Cloud.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import numpy as np
 import pandas as pd
@@ -15,7 +22,6 @@ from src.data import prepare_image
 from src.explain import grad_cam, overlay_heatmap
 from src.models import ensemble_probability
 
-ROOT = Path(__file__).resolve().parents[1]
 PAGES = (
     "Project overview",
     "Dataset exploration",

@@ -12,6 +12,7 @@ import numpy as np
 # Model convention after remapping the TFDS labels: 0=uninfected, 1=parasitized.
 CLASS_NAMES = ("uninfected", "parasitized")
 DEFAULT_SPLITS = ("train[:70%]", "train[70%:85%]", "train[85%:]")
+DEFAULT_DATA_DIR = Path(__file__).resolve().parents[1] / "data" / "tensorflow_datasets"
 
 
 def set_global_determinism(seed: int) -> None:
@@ -54,7 +55,7 @@ def load_datasets(
         "malaria",
         split=list(splits),
         as_supervised=True,
-        data_dir=str(data_dir) if data_dir else None,
+        data_dir=str(data_dir or DEFAULT_DATA_DIR),
         shuffle_files=False,
     )
 

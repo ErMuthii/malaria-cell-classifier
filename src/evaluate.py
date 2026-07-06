@@ -81,9 +81,18 @@ def evaluate_model(model_path: str | Path, config_path: str | Path | None = None
     import yaml
 
     model_path = Path(model_path)
+    if not model_path.is_file():
+        raise FileNotFoundError(
+            f"Model artifact not found: {model_path}. Train this model successfully before evaluation."
+        )
     if config_path is None:
         config_path = model_path.parent / "config.yaml"
-    config = yaml.safe_load(Path(config_path).read_text(encoding="utf-8"))
+    config_path = Path(config_path)
+    if not config_path.is_file():
+        raise FileNotFoundError(
+            f"Training configuration not found: {config_path}. Pass it explicitly with --config."
+        )
+    config = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     splits = (config["train_split"], config["validation_split"], config["test_split"])
     _, validation_ds, test_ds = load_datasets(
         config["image_size"], config["batch_size"], config["seed"], splits

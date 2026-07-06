@@ -9,8 +9,14 @@ import tensorflow_datasets as tfds
 from PIL import Image
 
 
-def prepare(sample_size: int, output_dir: Path) -> None:
-    dataset, info = tfds.load("malaria", split="train", with_info=True, as_supervised=True)
+def prepare(sample_size: int, output_dir: Path, data_dir: Path) -> None:
+    dataset, info = tfds.load(
+        "malaria",
+        split="train",
+        with_info=True,
+        as_supervised=True,
+        data_dir=str(data_dir),
+    )
     output_dir.mkdir(parents=True, exist_ok=True)
     per_class = max(1, sample_size // 2)
     counts = {0: 0, 1: 0}
@@ -33,8 +39,9 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--sample-size", type=int, default=12)
     parser.add_argument("--output-dir", type=Path, default=Path("data/sample"))
+    parser.add_argument("--data-dir", type=Path, default=Path("data/tensorflow_datasets"))
     args = parser.parse_args()
-    prepare(args.sample_size, args.output_dir)
+    prepare(args.sample_size, args.output_dir, args.data_dir)
 
 
 if __name__ == "__main__":

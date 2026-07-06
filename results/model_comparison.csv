@@ -1,0 +1,5 @@
+model,role,sensitivity,specificity,f2,roc_auc,brier_score,size_mb,inference_ms_per_image,threshold,status
+Custom CNN,Baseline,,,,,,,,,not_evaluated
+MobileNetV2,Lightweight transfer candidate,,,,,,,,,not_evaluated
+EfficientNetB0,Stronger transfer candidate,,,,,,,,,not_evaluated
+Soft voting,Best two validated models,,,,,,,,,not_evaluated

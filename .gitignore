@@ -1,0 +1,34 @@
+.DS_Store
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# Dataset and TensorFlow caches
+data/raw/
+data/processed/
+data/sample/*
+!data/sample/README.md
+tensorflow_datasets/
+
+# Large model and experiment artifacts
+artifacts/*
+!artifacts/README.md
+*.keras
+*.h5
+*.ckpt*
+*.tflite
+logs/
+
+# Keep compact result files, ignore generated plots by default
+results/*.png
+results/*.pdf

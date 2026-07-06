@@ -1,0 +1,13 @@
+experiment_name: efficientnet_b0
+model: efficientnet_b0
+seed: 42
+image_size: [224, 224]
+batch_size: 24
+epochs: 12
+learning_rate: 0.0003
+dropout: 0.30
+weights: imagenet
+train_split: "train[:70%]"
+validation_split: "train[70%:85%]"
+test_split: "train[85%:]"
+early_stopping_patience: 3

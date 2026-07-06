@@ -1,0 +1,12 @@
+experiment_name: custom_cnn
+model: custom_cnn
+seed: 42
+image_size: [128, 128]
+batch_size: 32
+epochs: 15
+learning_rate: 0.001
+dropout: 0.30
+train_split: "train[:70%]"
+validation_split: "train[70%:85%]"
+test_split: "train[85%:]"
+early_stopping_patience: 4

@@ -68,8 +68,9 @@ The dashboard includes project context, data exploration, model comparison, eval
 For Streamlit Community Cloud:
 
 1. Choose `app/streamlit_app.py` as the entrypoint.
-2. Open **Advanced settings** and set **Python version** to **3.11** before deploying or rebooting the app. TensorFlow `2.16.2` does not provide wheels for newer runtimes such as Python 3.14.
-3. Upload trained `.keras` files using a GitHub Release or cloud storage; do not commit them to Git.
+2. Open **Advanced settings** and set **Python version** to **3.11** before deploying or rebooting the app.
+3. Community Cloud installs `app/requirements.txt`, which is intentionally lighter than the root training requirements and avoids loading TensorFlow during presentation-only deployment.
+4. Upload trained `.keras` files using a GitHub Release or cloud storage; do not commit them to Git. Live cloud inference requires adding a compatible TensorFlow runtime back to the app environment.
 
 ## Team workflow
 

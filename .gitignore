@@ -18,11 +18,18 @@ data/raw/
 data/processed/
 data/sample/*
 !data/sample/README.md
+!data/sample/*/
+!data/sample/**/*.png
 tensorflow_datasets/
 
-# Large model and experiment artifacts
+# Large model artifacts stay ignored, but compact training metadata is tracked
+# for the presentation dashboard.
 artifacts/*
 !artifacts/README.md
+!artifacts/*/
+!artifacts/*/config.yaml
+!artifacts/*/epochs.csv
+!artifacts/*/run.json
 *.keras
 *.h5
 *.ckpt*

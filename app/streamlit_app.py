@@ -688,6 +688,98 @@ elif page == "Training history":
                 st.line_chart(history.set_index("epoch")[fp_columns])
                 st.caption("False positives matter because excessive alerts reduce screening usefulness.")
 
+elif page == "Ensemble learning":
+    _hero(
+        "Ensemble learning",
+        "Soft-voting strategy for combining the strongest validated classifiers without retraining them.",
+    )
+    comparison = _comparison_dataframe()
+    evaluated = _numeric_results(
+        comparison,
+        ["sensitivity", "specificity", "precision", "f2", "roc_auc", "model_size_mb"],
+    )
+    members = evaluated[evaluated["model"].isin(["mobilenet_v2", "efficientnet_b0"])]
+
+    _section_card(
+        "Soft-voting approach",
+        """
+<p>The ensemble combines member model probabilities by averaging them, then applies a single
+decision threshold. This can reduce dependence on one architecture while keeping the output
+interpretable as a parasitized-cell probability.</p>
+<p>In this project, MobileNetV2 and EfficientNetB0 are the intended ensemble members because they
+have the strongest sensitivity-first validation and test performance among the evaluated models.</p>
+        """,
+    )
+
+    if members.empty:
+        st.info("Evaluate MobileNetV2 and EfficientNetB0 to populate the ensemble member table.")
+    else:
+        st.subheader("Candidate ensemble members")
+        table = members[
+            [
+                "Model",
+                "sensitivity",
+                "specificity",
+                "precision",
+                "f2",
+                "roc_auc",
+                "model_size_mb",
+                "mean_inference_ms_per_image",
+                "threshold",
+            ]
+        ].rename(
+            columns={
+                "sensitivity": "Sensitivity",
+                "specificity": "Specificity",
+                "precision": "Precision",
+                "f2": "F2",
+                "roc_auc": "ROC-AUC",
+                "model_size_mb": "Size MB",
+                "mean_inference_ms_per_image": "Inference ms/image",
+                "threshold": "Threshold",
+            }
+        )
+        st.dataframe(
+            table.style.format(
+                {
+                    "Sensitivity": _format_percent,
+                    "Specificity": _format_percent,
+                    "Precision": _format_percent,
+                    "F2": _format_number,
+                    "ROC-AUC": _format_number,
+                    "Size MB": lambda value: _format_number(value, 2),
+                    "Inference ms/image": lambda value: _format_number(value, 2),
+                    "Threshold": lambda value: _format_number(value, 3),
+                }
+            ),
+            use_container_width=True,
+            hide_index=True,
+        )
+
+        top_member = members.sort_values(
+            by=["sensitivity", "specificity", "f2", "roc_auc"],
+            ascending=False,
+        ).iloc[0]
+        metric_a, metric_b, metric_c = st.columns(3)
+        metric_a.metric("Best member sensitivity", _format_percent(top_member["sensitivity"]))
+        metric_b.metric("Best member specificity", _format_percent(top_member["specificity"]))
+        metric_c.metric("Best member", top_member["Model"])
+
+    ensemble_result = comparison[comparison["model"].eq("soft_voting")]
+    if ensemble_result.empty or ensemble_result["Status"].iloc[0] != "evaluated":
+        _callout(
+            "<strong>Current deployment status:</strong> no saved soft-voting evaluation file is present yet. "
+            "The page shows the ensemble design and member evidence from committed evaluation results. "
+            "To report final ensemble performance, save a `soft_voting` evaluation JSON under `results/`.",
+            risk=True,
+        )
+    else:
+        result = ensemble_result.iloc[0]
+        metric_a, metric_b, metric_c = st.columns(3)
+        metric_a.metric("Ensemble sensitivity", _format_percent(result["sensitivity"]))
+        metric_b.metric("Ensemble specificity", _format_percent(result["specificity"]))
+        metric_c.metric("Ensemble F2", _format_number(result["f2"]))
+
 elif page == "Upload cell images":
     _hero(
         "Upload cell images",

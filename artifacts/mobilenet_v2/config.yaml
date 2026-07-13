@@ -1,0 +1,13 @@
+experiment_name: mobilenet_v2
+model: mobilenet_v2
+seed: 42
+image_size: [160, 160]
+batch_size: 32
+epochs: 12
+learning_rate: 0.0003
+dropout: 0.25
+weights: imagenet
+train_split: "train[:70%]"
+validation_split: "train[70%:85%]"
+test_split: "train[85%:]"
+early_stopping_patience: 3

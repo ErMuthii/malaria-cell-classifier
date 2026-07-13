@@ -1,0 +1,17 @@
+# Streamlit Community Cloud installs dependency files next to the entrypoint
+# before root-level files. Keep this app environment lightweight and separate
+# from the TensorFlow training environment in ../requirements.txt.
+streamlit==1.35.0
+numpy==1.26.4
+pandas==2.2.2
+matplotlib==3.9.0
+Pillow==10.3.0
+PyYAML==6.0.1
+
+# Pin broad Streamlit transitive ranges to stable versions from the same era
+# as Streamlit 1.35 to avoid native wheel crashes during app startup.
+altair==5.3.0
+pyarrow==16.1.0
+rich==13.7.1
+tenacity==8.3.0
+tornado==6.4.1

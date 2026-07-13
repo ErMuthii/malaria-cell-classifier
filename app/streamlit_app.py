@@ -28,7 +28,7 @@ PAGES = (
     "Model comparison",
     "Evaluation results",
     "Training history",
-    "Upload cell images",
+    "Ensemble learning",
     "Explain prediction",
     "Limitations and responsible use",
 )

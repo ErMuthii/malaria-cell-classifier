@@ -63,7 +63,13 @@ Model selection must balance sensitivity, specificity, F2, calibration, size, in
 streamlit run app/streamlit_app.py
 ```
 
-The dashboard includes project context, data exploration, model comparison, evaluation, single/batch upload, Grad-CAM, and responsible-use limitations. For Streamlit Community Cloud, choose `app/streamlit_app.py` as the entrypoint and Python 3.11. Upload trained `.keras` files using a GitHub Release or cloud storage; do not commit them to Git.
+The dashboard includes project context, data exploration, model comparison, evaluation, single/batch upload, Grad-CAM, and responsible-use limitations.
+
+For Streamlit Community Cloud:
+
+1. Choose `app/streamlit_app.py` as the entrypoint.
+2. Open **Advanced settings** and set **Python version** to **3.11** before deploying or rebooting the app. TensorFlow `2.16.2` does not provide wheels for newer runtimes such as Python 3.14.
+3. Upload trained `.keras` files using a GitHub Release or cloud storage; do not commit them to Git.
 
 ## Team workflow
 
